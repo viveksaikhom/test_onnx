@@ -6,13 +6,14 @@ import os
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
-model_path = os.path.join(script_dir, "../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx")
+model_path = os.path.join(script_dir, "../../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx")
 
-session = ort.InferenceSession(model_path)
+providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider']
+
+session = ort.InferenceSession(model_path, providers=providers)
 
 input_name = session.get_inputs()[0].name
 output_names = [output.name for output in session.get_outputs()]
-
 
 def preprocess_image(image, input_size=(416, 416)):
     image = Image.fromarray(image).convert("RGB")
@@ -22,15 +23,17 @@ def preprocess_image(image, input_size=(416, 416)):
     image_data = np.expand_dims(image_data, axis=0)
     return image_data
 
-
 cap = cv2.VideoCapture("usb camera0")
 
 if not cap.isOpened():
     print("Error: Could not open video stream.")
     exit()
 
-screen_width = 1280
-screen_height = 720
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+screen_width = 1920
+screen_height = 1080
 
 cv2.namedWindow("Camera Feed", cv2.WINDOW_NORMAL)
 cv2.setWindowProperty("Camera Feed", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -42,6 +45,7 @@ while True:
         break
 
     input_data = preprocess_image(frame)
+
     outputs = session.run(output_names, {input_name: input_data})
 
     detections, labels = outputs
