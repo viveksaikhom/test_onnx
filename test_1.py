@@ -7,6 +7,10 @@ import os
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 model_path = os.path.join(script_dir, "../../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx")
+artifacts_folder = "../../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
+
+if not os.path.exists(artifacts_folder):
+    os.makedirs(artifacts_folder)
 
 providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider']
 
@@ -32,9 +36,6 @@ if not cap.isOpened():
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
-screen_width = 1920
-screen_height = 1080
-
 cv2.namedWindow("Camera Feed", cv2.WINDOW_NORMAL)
 cv2.setWindowProperty("Camera Feed", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
@@ -53,11 +54,11 @@ while True:
     print("Labels:", labels)
 
     for detection in detections[0]:
-        x1, y1, x2, y2 = detection[:4]
-        confidence = detection[4]
+        x1, y1, x2, y2, confidence = detection[:5]
         if confidence > 0.6:
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-            cv2.putText(frame, f"Conf: {confidence:.2f}", (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.putText(frame, f"Conf: {confidence:.2f}", (int(x1), int(y1) - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     cv2.imshow("Camera Feed", frame)
 
