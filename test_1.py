@@ -6,11 +6,9 @@ import os
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
-model_path = os.path.join(script_dir, "../../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx")
-artifacts_folder = "../../model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
+model_path = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx"
+artifacts_folder = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
 
-if not os.path.exists(artifacts_folder):
-    os.makedirs(artifacts_folder)
 
 providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider']
 
@@ -18,6 +16,7 @@ session = ort.InferenceSession(model_path, providers=providers)
 
 input_name = session.get_inputs()[0].name
 output_names = [output.name for output in session.get_outputs()]
+
 
 def preprocess_image(image, input_size=(416, 416)):
     image = Image.fromarray(image).convert("RGB")
