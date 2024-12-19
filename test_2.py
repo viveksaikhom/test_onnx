@@ -2,11 +2,12 @@ import cv2
 import onnxruntime
 import time
 
+# Model and artifact paths
 model_path = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx"
 artifacts_folder = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
 class_names = ['with helmet', 'without_helmet']
 
-
+# Initialize the ONNX model
 ort_session = onnxruntime.InferenceSession(
     model_path,
     providers=[
@@ -14,22 +15,26 @@ ort_session = onnxruntime.InferenceSession(
         {"provider": "TensorrtExecutionProvider"},
         {"provider": "OpenVINOExecutionProvider"},
         {"provider": "DMLExecutionProvider"},
-        {"provider": "CUDAExecutionProvider"},
         {"provider": "CPUExecutionProvider"},
-        {"provider": "TIDLExecutionProvider",
-         "device_id": "usb camera0",
-         "artifacts_folder": artifacts_folder}
+        {"provider": "TIDLExecutionProvider", "device_id": "usb camera0", "artifacts_folder": artifacts_folder}
     ]
 )
 
+print("Starting...")
 input_name = ort_session.get_inputs()[0].name
 output_names = [ort_session.get_outputs()[0].name]
 
 cap = cv2.VideoCapture("usb camera0")
 
+print("Opening Camera")
+if not cap.isOpened():
+    print("Error: Could not access the camera.")
+    exit()
+
 while True:
     ret, frame = cap.read()
     if not ret:
+        print("Error: Failed to capture frame.")
         break
 
     img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -56,7 +61,7 @@ while True:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-            print(f"Detected: {label}")
+            print(f"Detected: {label} (Inference time: {inference_time:.4f}s)")
 
     cv2.imshow('YOLOX Nano Lite Inference', frame)
 
