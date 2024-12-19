@@ -2,21 +2,15 @@ import cv2
 import onnxruntime
 import time
 
-# Model and artifact paths
 model_path = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx"
 artifacts_folder = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
 class_names = ['with helmet', 'without_helmet']
 
-# Initialize the ONNX model
 ort_session = onnxruntime.InferenceSession(
     model_path,
     providers=[
-        {"provider": "CUDAExecutionProvider"},
-        {"provider": "TensorrtExecutionProvider"},
-        {"provider": "OpenVINOExecutionProvider"},
-        {"provider": "DMLExecutionProvider"},
-        {"provider": "CPUExecutionProvider"},
-        {"provider": "TIDLExecutionProvider", "device_id": "usb camera0", "artifacts_folder": artifacts_folder}
+        {"provider": "TIDLExecutionProvider", "device_id": "usb camera0", "artifacts_folder": artifacts_folder},
+        {"provider": "CPUExecutionProvider"}
     ]
 )
 
@@ -24,7 +18,7 @@ print("Starting...")
 input_name = ort_session.get_inputs()[0].name
 output_names = [ort_session.get_outputs()[0].name]
 
-cap = cv2.VideoCapture("usb camera0")
+cap = cv2.VideoCapture("/dev/video0")
 
 print("Opening Camera")
 if not cap.isOpened():
