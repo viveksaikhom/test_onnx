@@ -9,7 +9,6 @@ class_names = ['with helmet', 'without_helmet']
 ort_session = onnxruntime.InferenceSession(
     model_path,
     providers=[
-        {"provider": "TIDLExecutionProvider", "device_id": "/dev/video-usb-cam0", "artifacts_folder": artifacts_folder},
         {"provider": "CPUExecutionProvider"}
     ]
 )
@@ -18,7 +17,7 @@ print("Starting...")
 input_name = ort_session.get_inputs()[0].name
 output_names = [ort_session.get_outputs()[0].name]
 
-cap = cv2.VideoCapture("/dev/video-usb-cam0")
+cap = cv2.VideoCapture("/dev/video0")
 
 print("Opening Camera")
 if not cap.isOpened():
