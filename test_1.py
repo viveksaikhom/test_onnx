@@ -10,10 +10,12 @@ model_path = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/
 artifacts_folder = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
 
 
-providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider']
+providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider', {"artifacts_folder": artifacts_folder}]
 
+print("Starting...")
 session = ort.InferenceSession(model_path, providers=providers)
 
+print("Naish")
 input_name = session.get_inputs()[0].name
 output_names = [output.name for output in session.get_outputs()]
 
@@ -26,7 +28,11 @@ def preprocess_image(image, input_size=(416, 416)):
     image_data = np.expand_dims(image_data, axis=0)
     return image_data
 
+
+print("Opening Cam")
+
 cap = cv2.VideoCapture("usb camera0")
+
 
 if not cap.isOpened():
     print("Error: Could not open video stream.")
