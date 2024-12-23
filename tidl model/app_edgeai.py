@@ -31,10 +31,17 @@
 
 import sys
 import yaml
-
+import TI.GPIO as GPIO
 from edge_ai_class import EdgeAIDemo
 import utils
 
+RED_PIN = 16
+GREEN_PIN = 18
+
+# Set up GPIO pins
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(RED_PIN, GPIO.OUT)
+GPIO.setup(GREEN_PIN, GPIO.OUT)
 
 def main(sys_argv):
     args = utils.get_cmdline_args(sys_argv)
@@ -55,6 +62,7 @@ def main(sys_argv):
         demo.wait_for_exit()
     except KeyboardInterrupt:
         demo.stop()
+        GPIO.cleanup()  # Ensure GPIO pins are cleaned up
     finally:
         pass
 
@@ -64,4 +72,10 @@ def main(sys_argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    print('\nPIN 16 - Red\n PIN 18 - Green')
+    user = input("Should we start (y/n): ")
+    if user == 'y':
+        main(sys.argv)
+    else:
+        print('No worries...')
+        exit()
