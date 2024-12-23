@@ -32,7 +32,7 @@ import cv2
 import numpy as np
 import copy
 import debug
-import RPi.GPIO as GPIO
+import TI.GPIO as GPIO
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -299,57 +299,32 @@ class PostProcessDetection(PostProcess):
         cv2.rectangle(
            frame,
             (int((box[2] + box[0]) / 2) - 5, int((box[3] + box[1]) / 2) + 5),
-            (int((box[2] + box[0]) / 2) + 160, int((box[3] + box[1]) / 2) - 15),
-            box_color,
-            -1,
-        )
+            (int((box[2] + box[0]) / 2) + 160, int((box[3] + box[1]) / 2) - 15), box_color, -1,)
         cv2.putText(
             frame,
             class_name,
             (int((box[2] + box[0]) / 2), int((box[3] + box[1]) / 2)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,
-            text_color,
-	    2,)
-        if(class_name=="without_helmet"):
-            cv2.putText(
-                frame,
-                "not detected",
-                (10,150),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                2,
-                (255,0,0),
-                3,)
-            cv2.putText(
-            frame,
-            "Please! wear a helmet",
-            (10,180),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0,255,0),
-            2,
-            )
-        if(class_name=="with helmet"):
-            cv2.putText(
-                frame,
-                "detected",
-                (10,150),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                2,
-               (0,255,0),
-                3,)
-            cv2.putText(
-            frame,
-            "You are ready to Go!",
-            (10,180),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            text_color,
-            2,
-            )
+            text_color, 2, )
+        if class_name == "without_helmet":
+            text = "not detected"
+            position = (10, 150)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 2
+            color = (255, 0, 0)
+            thickness = 3
 
+            cv2.putText(frame, text, position, font, font_scale, color, thickness)
 
-
+            cv2.putText(frame, "Please! wear a helmet", (10, 180), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, )
+            GPIO.output(GREEN_PIN, GPIO.LOW)
+            GPIO.output(RED_PIN, GPIO.HIGH)
+        if class_name == "with helmet":
+            cv2.putText(frame, "detected", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 3,)
+            cv2.putText(frame, "You are ready to Go!", (10, 180), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, )
+            GPIO.output(RED_PIN, GPIO.LOW)
+            GPIO.output(GREEN_PIN, GPIO.HIGH)
 
         if self.debug:
             self.debug_str += class_name
