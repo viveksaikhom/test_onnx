@@ -10,7 +10,7 @@ model_path = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/
 artifacts_folder = "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts"
 
 
-providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider', {"artifacts_folder": artifacts_folder}]
+providers = ['TIDLExecutionProvider', 'TIDLCompilationProvider', 'CPUExecutionProvider']
 
 print("Starting...")
 session = ort.InferenceSession(model_path, providers=providers)
