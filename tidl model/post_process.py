@@ -32,6 +32,15 @@ import cv2
 import numpy as np
 import copy
 import debug
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+
+RED_PIN = 16
+GREEN_PIN = 17
+
+GPIO.setup(RED_PIN, GPIO.OUT)
+GPIO.setup(GREEN_PIN, GPIO.OUT)
 
 np.set_printoptions(threshold=np.inf, linewidth=np.inf)
 
@@ -53,6 +62,15 @@ def create_title_frame(title, width, height):
             frame, title, (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2
         )
     return frame
+
+
+def control_gpio_based_on_class(class_name):
+    if class_name == "without_helmet":
+        GPIO.output(GREEN_PIN, GPIO.LOW)
+        GPIO.output(RED_PIN, GPIO.HIGH)
+    elif class_name == "with helmet":
+        GPIO.output(RED_PIN, GPIO.LOW)
+        GPIO.output(GREEN_PIN, GPIO.HIGH)
 
 
 def overlay_model_name(frame, model_name, start_x, start_y, width, height):
@@ -292,7 +310,7 @@ class PostProcessDetection(PostProcess):
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,
             text_color,
-	    2,)	
+	    2,)
         if(class_name=="without_helmet"):
             cv2.putText(
                 frame,
