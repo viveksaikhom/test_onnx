@@ -26,8 +26,13 @@ image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 input_height, input_width = input_shape[2], input_shape[3]
 image = cv2.resize(image, (input_width, input_height))
 
+image = image.astype(np.uint8)
+
 image = np.transpose(image, (2, 0, 1))
+
 image = np.expand_dims(image, axis=0)
+
+print(f"Input data type: {image.dtype}")
 
 outputs = ort_session.run(output_names, {input_name: image})
 print(outputs)
