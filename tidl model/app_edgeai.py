@@ -38,7 +38,6 @@ import utils
 RED_PIN = 16
 GREEN_PIN = 18
 
-# Set up GPIO pins
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(RED_PIN, GPIO.OUT)
 GPIO.setup(GREEN_PIN, GPIO.OUT)
