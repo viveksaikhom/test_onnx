@@ -13,3 +13,5 @@ dummy_input = np.random.randn(*input_shape).astype(np.float32)
 
 output = session.run(None, {input_name: dummy_input})
 print("Output:", output)
+
+
