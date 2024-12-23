@@ -1,25 +1,15 @@
+import onnxruntime_tidl as ort_tidl
 import numpy as np
-import onnxruntime as ort
 
-tidl_options = {
-    "provider": "TIDLExecutionProvider",
-    "options": {
-        "artifacts_folder": "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/artifacts",
-        "enable_layer_grouping": True,
-    }
-}
+model_path = '/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx'
 
-# Initialize ONNX Runtime session
-ort_session = ort.InferenceSession(
-    "/opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A/model/model.onnx",
-    providers=[tidl_options]
-)
+session = ort_tidl.InferenceSession(model_path)
 
-input_name = ort_session.get_inputs()[0].name
-output_names = [output.name for output in ort_session.get_outputs()]
+input_name = session.get_inputs()[0].name
+input_shape = session.get_inputs()[0].shape
+print(f"Input shape: {input_shape}")
 
-input_shape = ort_session.get_inputs()[0].shape
-input_data = np.random.rand(*input_shape).astype(np.float32)
+dummy_input = np.random.randn(*input_shape).astype(np.float32)
 
-outputs = ort_session.run(output_names, {input_name: input_data})
-print(outputs)
+output = session.run(None, {input_name: dummy_input})
+print("Output:", output)
