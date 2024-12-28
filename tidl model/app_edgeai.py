@@ -61,8 +61,8 @@ def main(sys_argv):
         demo.wait_for_exit()
     except KeyboardInterrupt:
         demo.stop()
-        GPIO.cleanup()  # Ensure GPIO pins are cleaned up
     finally:
+        GPIO.cleanup()
         pass
 
     utils.disable_curses_reports()
@@ -71,7 +71,8 @@ def main(sys_argv):
 
 
 if __name__ == "__main__":
-    print('\nPIN 16 - Red\n PIN 18 - Green')
+    GPIO.cleanup()
+    print('\nPIN 16 - Red\nPIN 18 - Green')
     user = input("Should we start (y/n): ")
     if user == 'y':
         main(sys.argv)
