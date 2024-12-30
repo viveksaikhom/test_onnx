@@ -226,11 +226,22 @@ class Flow:
 
         Flow.count += 1
 
+    def check_output_availability(self):
+        """
+        Check if any output is available for the flow.
+        """
+        for subflow in self.sub_flows:
+            for output in subflow.outputs:
+                if not output:
+                    print(f"[ERROR] Output not available for subflow {subflow.id}")
+                    return False
+        return True
+
 
 class SubFlow:
     """
     Class to construct a sub flow object combining
-    input, model and output
+    input, model, and output
     """
 
     count = 0
@@ -278,12 +289,17 @@ class SubFlow:
                     + "input resolution"
                 )
                 sys.exit()
+
+            if not self.output:
+                print(f"[ERROR] Output not available for SubFlow {self.id}")
+                sys.exit()
+
             self.disp_id = self.output.get_disp_id(self, input.fps)
 
         if self.model.task_type == "classification":
             resize = self.model.resize[0]
             cam_dims = (self.input.width, self.input.height)
-            # tiovxmultiscaler dosen't support odd resolutions
+            # tiovxmultiscaler doesn't support odd resolutions
             self.pre_proc_resize = (
                 ((cam_dims[0] * resize // min(cam_dims)) >> 1) << 1,
                 ((cam_dims[1] * resize // min(cam_dims)) >> 1) << 1,
@@ -314,3 +330,4 @@ class SubFlow:
             self.debug_config = debug.DebugConfig(self, flow.debug_config)
         SubFlow.count += 1
         SubFlow.scaler_split_count += 1
+
