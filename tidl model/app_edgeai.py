@@ -71,7 +71,6 @@ def main(sys_argv):
 
 
 if __name__ == "__main__":
-    GPIO.cleanup()
     print('\nPIN 16 - Red\nPIN 18 - Green')
     user = input("Should we start (y/n): ")
     if user == 'y':
