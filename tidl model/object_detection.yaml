@@ -30,24 +30,23 @@ models:
         viz_threshold: 0.6
     model2:
         model_path: /opt/model_zoo/20241208-173443_yolox_nano_lite_onnxrt_AM62A
-
         viz_threshold: 0.6
 outputs:
     output0:
-        sink: kmssink
+#        sink: kmssink
         width: 1920
         height: 1080
         overlay-perf-type: graph
     output1:
-        sink: /opt/edgeai-test-data/output/testp.mkv
+#        sink: /opt/edgeai-test-data/output/testp.mkv
         width: 1920
         height: 1080
     output2:
-        sink: /opt/edgeai-test-data/output/output_image_%04d.jpg
+#        sink: /opt/edgeai-test-data/output/output_image_%04d.jpg
         width: 1920
         height: 1080
     output3:
-        sink: remote
+#        sink: remote
         width: 1920
         height: 1080
         port: 8081
