@@ -65,10 +65,10 @@ def create_title_frame(title, width, height):
 
 
 def control_gpio_based_on_class(class_name):
-    if class_name == "without_helmet":
+    if class_name == "without_helmet" or class_name == "without mask":
         GPIO.output(GREEN_PIN, GPIO.LOW)
         GPIO.output(RED_PIN, GPIO.HIGH)
-    elif class_name == "with helmet":
+    elif class_name == "with helmet" or class_name == "with mask":
         GPIO.output(RED_PIN, GPIO.LOW)
         GPIO.output(GREEN_PIN, GPIO.HIGH)
 
