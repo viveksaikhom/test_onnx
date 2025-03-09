@@ -2,7 +2,7 @@ import TI.GPIO as GPIO
 
 GPIO.setmode(GPIO.BOARD)
 
-pins_to_cleanup = [16, 18, 22]
+pins_to_cleanup = [16, 18, 22, 37, 40, 38]
 
 for pin in pins_to_cleanup:
     GPIO.setup(pin, GPIO.OUT)
