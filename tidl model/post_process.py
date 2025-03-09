@@ -307,7 +307,7 @@ class PostProcessDetection(PostProcess):
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,
             text_color, 2, )
-        if class_name == "without_helmet":
+        if class_name == "without_helmet" or class_name == "without mask":
             text = "not detected"
             position = (10, 150)
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -320,7 +320,7 @@ class PostProcessDetection(PostProcess):
             cv2.putText(frame, "Please! wear a helmet", (10, 180), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, )
             GPIO.output(GREEN_PIN, GPIO.LOW)
             GPIO.output(RED_PIN, GPIO.HIGH)
-        if class_name == "with helmet":
+        if class_name == "with helmet" or class_name == "with mask":
             cv2.putText(frame, "detected", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 3,)
             cv2.putText(frame, "You are ready to Go!", (10, 180), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, )
             GPIO.output(RED_PIN, GPIO.LOW)
